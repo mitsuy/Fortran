@@ -5,7 +5,7 @@
 !  Boundary Condition : Dirichlet
 !     f(0)=f(nx+nxb)=0
 !
-! Written by M.YAGYU 4 Jule 2019
+! Written by M.YAGYU 4 July 2019
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 
@@ -34,26 +34,24 @@ program the_diff
   nxb=1
   
   dt=0.01
-  time=0.1
+  time=10.0
   nt=time/dt
 
-  kappa=0.01
+  kappa=1.e-4
   
   allocate(Temp(nx+nxb))
 
-  do i =0,nx+nxb
+  do i=0,nx+nxb
      write(*,*)Temp(i)
-     print *,i
   end do
 
   open(10,file='1d_diff.dat',status='replace')
   
-  do i=1,nx
+  do i =1,nx
      t=0.0
-     !x=(i-0.5)*dx
      x=i*dx
      Temp(i)=1-cos(2*pi*x/Lx)
-     write(10,*)t,(x-0.5*Lx),Temp(i)
+     write(10,'(3f9.5)')t,(x-0.5*Lx),Temp(i)
   end do
   write(10,*)''
 
@@ -69,10 +67,11 @@ program the_diff
 
         !x=(n-0.5)*dx
         x=n*dx
-        Temp(n)=Temp(n)+dt*kappa*(Temp(n+1)-2*Temp(n)-Temp(n-1))/(dx*dx)+1-cos(2*pi/Lx*x*x)
+        !Temp(n)=Temp(n)+dt*kappa*(Temp(n+1)-2*Temp(n)-Temp(n-1))/(dx*dx)+1-cos(2*pi/Lx*x*x)
+        Temp(n)=Temp(n)+dt*kappa*(Temp(n+1)-2*Temp(n)-Temp(n-1))/(dx*dx)
 
-        write(*,*)t,x,Temp(n)
-        write(10,*)t,(x-0.5*Lx),Temp(n)
+        write(*,'(3f9.5)')t,x,Temp(n)
+        write(10,'(3f9.5)')t,(x-0.5*Lx),Temp(n)
 
      end do
      
